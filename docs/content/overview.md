@@ -16,11 +16,16 @@ abbreviations:
     GP: Gaussian Process
 ---
 
-This is a top-level document that introduces the Four-Dimensional Variational (4DVar) Formulation from a modern perspective. The purpose of this document is to consolidate all of the 4DVarNet related stuff under one roof. It will also serve as a nice springboard for us to use it when explaining 4DVar for different groups, i.e. oceanographers, data assimilation experts and machine learning researchers. For the core foundations of 4DVar, this document will host links to the formulation, some specific details involving spatiotemporal discretization, and an introduction to the 4DVarNet algorithm using all of the notation described in the previous two documents. For things related to research, there is the document on stochasticity and document consolidating all of the papers that were published (or will be published) related to 4DVar.
+This is a top-level document that introduces the Four-Dimensional Variational (4DVar) Formulation from a modern perspective. The purpose of this document is to consolidate all of the 4DVarNet related stuff under one roof. 
+It will also serve as a nice springboard for us to use it when explaining 4DVar for different groups, i.e. oceanographers, data assimilation experts and machine learning researchers. 
+For the core foundations of 4DVar, this document will host links to the formulation, some specific details involving spatiotemporal discretization, and an introduction to the 4DVarNet algorithm using all of the notation described in the previous two documents. 
+For things related to research, there is the document on stochasticity and document consolidating all of the papers that were published (or will be published) related to 4DVar.
 
 
 ## Motivation
 
+4DVarNet is an excellent framework for solving many different problems.
+However, 
 
 This stems from the paper by [Kapteyn et al, 2021](doi:10.1038/s43588-021-00069-0) does a great explanation of how we can look at
 

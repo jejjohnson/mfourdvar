@@ -1,0 +1,40 @@
+# Table of Contents
+#
+# Myst will respect:
+# 1. New pages
+#      - file: relative/path/to/page
+# 2. New sections without an associated page
+#      - title: Folder Title
+#        sections: ...
+# 3. New sections with an associated page
+#      - file: relative/path/to/page
+#        sections: ...
+#
+# Note: Titles defined on pages here are not recognized.
+#
+# This spec is based on the JupyterBook table of contents.
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: content/overview
+chapters:
+  - title: Formulation
+    sections:
+      - file: content/tasks
+      - file: content/formulation
+      - file: content/estimation
+  - title: Model Choices
+    sections:
+      - file: content/model_choices/discretization
+      - file: content/model_choices/physics_informed
+      - file: content/model_choices/uncertainty
+  - title: Examples
+    sections:
+      - file: content/examples/state_estimation
+      - file: content/examples/param_estimation
+      - file: content/examples/bilevel_estimation
+      - file: content/examples/gradient_learning
+  - title: Resources
+    sections:
+      - file: content/resources/code
+      - file: content/resources/papers
