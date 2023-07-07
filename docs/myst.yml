@@ -1,18 +1,18 @@
 # See docs at: https://mystmd.org/guide/frontmatter
 version: 1
 project:
-  # title:
+  title: Modern 4DVar
   # description:
   keywords: []
-  authors: []
-  # github:
+  authors: ["J. Emmanuel Johnson"]
+  github: https://github.com/jejjohnson/mfourdvar
   # bibliography: []
 site:
   template: book-theme
-  # title:
+  title: Modern 4DVar
   # logo:
   nav: []
   actions:
-    - title: Learn More
-      url: https://mystmd.org/guide
+    - title: Modern 4DVar
+      url: https://github.com/jejjohnson/mfourdvar
   domains: []
