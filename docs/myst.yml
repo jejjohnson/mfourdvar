@@ -16,3 +16,5 @@ site:
     - title: Modern 4DVar
       url: https://github.com/jejjohnson/mfourdvar
   domains: []
+exports:
+  - format: html
