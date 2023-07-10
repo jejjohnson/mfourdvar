@@ -18,14 +18,20 @@
 format: jb-book
 root: content/overview
 chapters:
-  - title: Formulation
+  - title: Framework
     sections:
-      - file: content/tasks
-      - file: content/formulation
-      - file: content/estimation
+      - file: content/framework/tasks
+      - file: content/framework/problem_decisions
+      - file: content/framework/problem
+      - file: content/framework/estimation
+      - file: content/framework/learning
+  - title: Inference
+    sections:
+      - file: content/inference/overview
+      - file: content/inference/vi
   - title: Model Choices
     sections:
-      - file: content/model_choices/discretization
+      - file: content/model_choices/representation
       - file: content/model_choices/physics_informed
       - file: content/model_choices/uncertainty
   - title: Examples

@@ -1,8 +1,8 @@
 ---
-title: Discretization
+title: Data & Model Representation
 subject: Modern 4DVar
 subtitle: The Importance of Discretization
-short_title: Discretization
+short_title: Representation
 authors:
   - name: J. Emmanuel Johnson
     affiliations:

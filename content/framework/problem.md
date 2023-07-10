@@ -1,8 +1,8 @@
 ---
-title: Formulation
+title: Problem Structure
 subject: Modern 4DVar
-subtitle: How to think about modern 4DVar formulations
-short_title: Formulation
+subtitle: How to think about the problem structure.
+short_title: Problem Structure
 authors:
   - name: J. Emmanuel Johnson
     affiliations:
@@ -52,6 +52,36 @@ where $(\vec{\mathbf{x}},t)$ are spatiotemporal coordinates defined within some 
 
 
 ---
+
+## Observations
+
+```{mermaid}
+graph LR
+    Observations
+    
+```
+
+
+We define *observations* as quantities that we can measure which could be useful to help us infer the QOI we wish to estimate. If we're lucky, the observations are the exact QOI we wish to infer, perhaps with just some small noise corruption. However, in most real world problems, we often do not have access to the exact quantity of interest we are interested in estimating. So we need to use auxilary variables in the form of observations which we believe are useful and can help us infer the state.
+
+Mathematically, we can write this as 
+
+$$
+\begin{aligned}
+\boldsymbol{y} = \boldsymbol{y}(\vec{\mathbf{x}},t)
+&& \boldsymbol{y}: \boldsymbol{\Omega}_y \times \mathcal{T}_y \rightarrow \mathbb{R}^{D_y}
+&& \vec{\mathbf{x}}\in\Omega_y\subseteq\mathbb{R}^{D_s}
+&& t\in\mathcal{T}_y\subseteq\mathbb{R}^{+}
+\end{aligned}
+$$
+
+where $(\vec{\mathbf{x}},t)$ are spatiotemporal coordinates defined within some observation domain $(\boldsymbol{\Omega}_y,\mathcal{T}_y)$ and $\boldsymbol{y}$ is a scaler or vector-valued field defined for said domain. 
+
+In most cases, the observations are corrupted or auxillary variables that we believe are related to the QOI. For example, our QOI maybe SSH but we only have access to SST observations. So we can use SST observates to help us infer the state which subsequently helps us infer our QOI, SSH.
+
+
+
+---
 ## State
 
 ```{mermaid}
@@ -95,33 +125,6 @@ $$
 This is important to mention because we often get confused when talking about things like parameterizations where we want to fill in the missing physics from our numerical schemes to recover the ocean state. However, we want to acknowledge that this is not the ocean state, theses are simply quantities of interest.
 
 
----
-
-## Observations
-
-```{mermaid}
-graph LR
-    Observations
-    
-```
-
-
-We define *observations* as quantities that we can measure which could be useful to help us infer the QOI we wish to estimate. If we're lucky, the observations are the exact QOI we wish to infer, perhaps with just some small noise corruption. However, in most real world problems, we often do not have access to the exact quantity of interest we are interested in estimating. So we need to use auxilary variables in the form of observations which we believe are useful and can help us infer the state.
-
-Mathematically, we can write this as 
-
-$$
-\begin{aligned}
-\boldsymbol{y} = \boldsymbol{y}(\vec{\mathbf{x}},t)
-&& \boldsymbol{y}: \boldsymbol{\Omega}_y \times \mathcal{T}_y \rightarrow \mathbb{R}^{D_y}
-&& \vec{\mathbf{x}}\in\Omega_y\subseteq\mathbb{R}^{D_s}
-&& t\in\mathcal{T}_y\subseteq\mathbb{R}^{+}
-\end{aligned}
-$$
-
-where $(\vec{\mathbf{x}},t)$ are spatiotemporal coordinates defined within some observation domain $(\boldsymbol{\Omega}_y,\mathcal{T}_y)$ and $\boldsymbol{y}$ is a scaler or vector-valued field defined for said domain. 
-
-In most cases, the observations are corrupted or auxillary variables that we believe are related to the QOI. For example, our QOI maybe SSH but we only have access to SST observations. So we can use SST observates to help us infer the state which subsequently helps us infer our QOI, SSH.
 
 
 ---
