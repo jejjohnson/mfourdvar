@@ -21,13 +21,11 @@ Traditionally, we like to think that we can estimate ... via the Empirical Risk 
 $$
 z^* =
 \underset{z}{\text{argmin}} \hspace{2mm}
-\sum_{n=1}^N \boldsymbol{D}(z;\boldsymbol{\theta}) +
+\sum_{n=1}^N \boldsymbol{D}(z_n;\boldsymbol{\theta}) +
 \boldsymbol{R}(z;\boldsymbol{\theta})
 $$
 
-where $D$ is a data fidelity term and $R$ is a regularization term.
-
-
+where $D$ is a likelihood term (data fidelity) and $R$ is a prior term (regularization).
 We know that solve predictors minimize the average KL-Divergence
 
 $$
@@ -65,67 +63,101 @@ $$
 
 
 
----
-
-:::{prf:proof}
-:class: dropdown
-
-
-
-We want to find the optimal soft predictor by solving the problem of minimizing the population log-loss. 
-However, 
-
-$$
-q^*(\cdot|\cdot) = 
-\underset{q(\cdot|\cdot)}{\text{argmin}} \hspace{2mm}
-\mathbb{E}_{(z,y)\sim p(z,y)}
-\left[ -\log q(z|y)\right]
-$$
-
-Looking at the Bayes theorem, we con deconstruct this population loss as a conditional distribution.
-
-$$
-p(z,y) = p(z|y)p(y)
-$$
-
-We can use the law of iterated expectations to use this as follows
-
-$$
-q^*(\cdot|\cdot) = 
-\underset{q(\cdot|\cdot)}{\text{argmin}} \hspace{2mm}
-\mathbb{E}_{y\sim p(y)}
-\underbrace{
-    \left[\mathbb{E}_{z\sim p(z|y)}
-\left[ -\log q(z|y)\right]
-\right]}_{\text{Cross Entropy}}
-$$
-
-We know that the distribution of the observation data doesn't change and we have...
-So we can write this in terms of the cross entropy alone
-
-$$
-q^*(\cdot|y) = 
-\underset{q(\cdot|y)}{\text{argmin}} \hspace{2mm}
-\mathbb{E}_{z\sim p(z|y)}
-\left[ -\log q(z|y)\right]
-$$
-
-which is the cross entropy between the true posterior and the optimal soft predictor. 
-This is a measure of "regret" or excess loss. whereby the optimal soft predictor is when this is equal, i.e. $q^*(z|y)=p(z|y)$.
-The log-loss measures the "surprise" experienced by the predictor when observing $y=y$ given $z=z$.
-The surprise is higher if the output is less expected
-
-:::
 
 
 ## Bayesian Learning Rule
 
+We assume that there exists a subclass of distributions, $\mathcal{Q}$, which we can optimize over.
+In this case, we will assume that $\mathcal{Q}$ is a regular set and minimal exponential family of the form
 
 $$
+q(z;\boldsymbol{\lambda}) = 
+\boldsymbol{h}(\boldsymbol{z})
+\exp 
+\left[ 
+  \left\langle \boldsymbol{\lambda}, \boldsymbol{T}(\boldsymbol{z})\right\rangle
+  - \boldsymbol{A}(\boldsymbol{\lambda})
+\right]
+$$ (eq:exponential_family)
+
+* $\boldsymbol{\lambda}\in\Omega\subset\mathbb{R}^M$ are the natural (or canonical) parameters. 
+* $\boldsymbol{A}(\boldsymbol{\lambda})$ is the log partition (or cumulant) function which is finite, strictly convex and differentiable over $\Omega$.
+* $\boldsymbol{T}(\boldsymbol{\lambda})$ is the sufficient statistics
+$\langle \cdot,\cdot\rangle$ is an inner product
+* $\boldsymbol{h}(\boldsymbol{\theta}$) is the base measure.
+
+
+:::{note} Example: Multivariate Gaussian Distribution
+:class: dropdown
+An example of the exponential family is the multivariate Gaussian distribution.
+Most of us know the form given as
+
+$$
+\mathcal{N}(\boldsymbol{z}|\mathbf{m},\mathbf{S}^{-1}) \propto 
+\exp\left[ 
+  -\frac{1}{2}(\boldsymbol{z} - \mathbf{m})^\top 
+  \mathbf{P}(\boldsymbol{z} - \mathbf{m})
+\right]
+$$
+
+we can also write this in the information form of the natural parameters given by
+
+$$
+\mathcal{N}(\boldsymbol{z}|\mathbf{m},\mathbf{S}^{-1}) \propto 
+\exp\left[ 
+  (\mathbf{Pm})^\top \boldsymbol{z} + 
+  \text{Trace}\left(-\frac{\mathbf{P}}{2} \boldsymbol{zz}^\top\right)
+\right]
+$$
+
+We can also write the expectation parameters [{cite}`10.48550/arXiv.2111.01732`]
+
+$$
+\begin{aligned}
+\text{Moment Parameters}: &&
+\boldsymbol{\theta} &= 
+(\mathbf{m},\mathbf{P}) \\
+\text{Natural Parameters}: &&
+\boldsymbol{\lambda} &= 
+(\mathbf{P}^{-1}\mathbf{m},-\frac{1}{2}\mathbf{P}^{-1}) \\
+\text{Expectation Parameters}: &&
+\boldsymbol{\mu} &= 
+(\mathbf{m},\mathbf{mm}^\top+\mathbf{P}) \\
+\end{aligned}
+$$
+
+:::
+
+The expectation parameter is given by the following formula:
+
+$$
+\boldsymbol{\mu}(\boldsymbol{\lambda}) =
+\mathbb{E}_{z\sim q(\boldsymbol{\lambda})}
+\left[ 
+  \boldsymbol{T}(\boldsymbol{z})
+\right]
+$$
+
+This is a bijective function of $\lambda$.
+Some examples include the multivariate normal distribution and the Bernoulli distribution.
+
+The *Bayesian learning rule* (BLR) optimization algorithm tries to locate the best candidate $q^*(z;\lambda)$ in $\mathcal{Q}$ by updating the candidate $q(z;\lambda_k)$ with the natural parameter $\lambda_k$ at iteration $k$ using a sequence of learning rates $\rho_k>0$.
+This equation is given by
+
+$$
+\lambda^{(k+1)} = \lambda^{(k)} - \rho_k\tilde{\nabla}_\lambda
+\left[ 
+  \mathbb{E}_{z\sim q(z;\lambda_k)}\left(p(z,y)\right)
+  - \mathcal{H}(q(z;\lambda))
+\right]
+$$
+
+
+<!-- $$
 q^*(z|y) = 
-\underset{q(u|y)}{\text{argmin}} \hspace{2mm}
+\underset{q(z|y)}{\text{argmin}} \hspace{2mm}
 \mathbb{E}_{}
 \left[ p(y|z) \right] +
 D_{KL}
 \left[ q(z|y) || p(z|y)\right]
-$$
+$$ -->

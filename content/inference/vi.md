@@ -80,6 +80,7 @@ The first term is the variational distribution, the middle term is the joint dis
 
 :::{prf:proof}
 :class: dropdown
+:label: Proof I
 
 
 Let's look at the KLD measure again with the posterior.
