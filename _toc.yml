@@ -44,3 +44,8 @@ chapters:
     sections:
       - file: content/resources/code
       - file: content/resources/papers
+  - title: Lorenz-63
+    sections:
+      - file: content/l63/missing_data
+      - file: content/l63/state_est_strong
+      - file: content/l63/state_est_weak
