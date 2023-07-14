@@ -25,6 +25,11 @@ chapters:
       - file: content/framework/problem
       - file: content/framework/estimation
       - file: content/framework/learning
+  - title: Physical Models
+    sections:
+      - file: content/physical_models/overview
+      - file: content/physical_models/diff_models
+      - file: content/physical_models/simulations
   - title: Inference
     sections:
       - file: content/inference/overview
@@ -44,6 +49,12 @@ chapters:
     sections:
       - file: content/resources/code
       - file: content/resources/papers
+  - title: OceanBench
+    sections:
+      - file: content/oceanbench/overview
+      - file: content/oceanbench/ssh_interpolation
+      - file: content/oceanbench/ssh_forecast
+      - file: content/oceanbench/ssh_surrogates
   - title: Lorenz-63
     sections:
       - file: content/l63/missing_data
