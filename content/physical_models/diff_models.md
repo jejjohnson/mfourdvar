@@ -19,23 +19,19 @@ abbreviations:
 ---
 
 ```{mermaid}
-graph LR
-    Observation-Data --> ML-Ready-Data
-    Simulation-Data --> ML-Ready-Data
-    ML-Ready-Data --> ML-Ideation
-    ML-Ideation --> ML-Ideation
-    ML-Ideation --> ML-Tool
-    ML-Tool --> MLOPs
-    ML-Tool --> Research
-    ML-Tool --> Evaluation
-    MLOPs --> Product
+graph TD
+    Interpolators --> Variational-Solver
+    Differentiable-Models --> Variational-Solver
+    Surrogate-Models --> Variational-Solver
 ```
+
+
 
 ## Criteria
 
 
 **Chaotic**.
-The methods need to feature chaotic systems that we see in nature
+The models need to feature chaotic systems that we see in nature
 
 **Coupled**. 
 The methods should be able to allow us to train parameterizations.
@@ -47,6 +43,7 @@ It can also manifest itself as a multistate system whereby we only observe one s
 **Scale**.
 
 
+---
 ## Level I 
 
 > - Simple Chaotic ODEs

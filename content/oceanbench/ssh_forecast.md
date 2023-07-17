@@ -18,17 +18,9 @@ abbreviations:
 
 
 
-
-**Why Reanalysis?** 
-Reanalysis produces a comprehensive . 
-It uses the outputs of a numerical GCM that simulates the evolution of the ocean state combined with observations to generate a synthesized estimate of the ocean state. 
-For a forecasting problem, one approach is to train a model based on reanalysis data because it is the .
-Another approach is to train a model based on model data. 
-However, we can postulate that the rea
-
-
-**GLORYS Product**.  
-The GLORYS product has the temperature, salinity, current speed, current direction, sea-level, sea-ice extent, sea-ice concentration, and sea-ice thickness.
-
-
-In this case, will use the GLORYS 
+```{mermaid}
+graph LR
+    Forecast --> 1-Day
+    Forecast --> 5-Day
+    Forecast --> 10-Day
+```

@@ -29,11 +29,12 @@ chapters:
     sections:
       - file: content/physical_models/overview
       - file: content/physical_models/diff_models
-      - file: content/physical_models/simulations
+      - file: content/physical_models/ogcm
   - title: Inference
     sections:
       - file: content/inference/overview
       - file: content/inference/vi
+      - file: content/inference/gradient_learning
   - title: Model Choices
     sections:
       - file: content/model_choices/representation
@@ -45,18 +46,19 @@ chapters:
       - file: content/examples/param_estimation
       - file: content/examples/bilevel_estimation
       - file: content/examples/gradient_learning
-  - title: Resources
-    sections:
-      - file: content/resources/code
-      - file: content/resources/papers
   - title: OceanBench
     sections:
       - file: content/oceanbench/overview
+      - file: content/oceanbench/data
       - file: content/oceanbench/ssh_interpolation
       - file: content/oceanbench/ssh_forecast
       - file: content/oceanbench/ssh_surrogates
-  - title: Lorenz-63
+  - title: Example - Lorenz-63
     sections:
       - file: content/l63/missing_data
       - file: content/l63/state_est_strong
       - file: content/l63/state_est_weak
+  - title: Resources
+    sections:
+      - file: content/resources/code
+      - file: content/resources/papers

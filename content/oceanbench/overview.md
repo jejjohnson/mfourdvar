@@ -19,9 +19,9 @@ abbreviations:
     ML: Machine Learning
 ---
 
-> "OceanBench is a framework for co-designing learning-driven high-level experiments from ocean observations.
-> It consistes of an end-to-end framework for piping data from its raw form to an ML-ready state and from model outputs to interpretable quantities.
-> We regard OceanBench as a key facilitator for the uptake of MLOPs tools and research for ocean-related datasets and case studies.
+> "OceanBench is a framework for co-designing learning-driven high-level experiments from ocean models, reanalysis, and observations.
+> It consists of an end-to-end framework for piping data from its raw form to an ML-ready state and from model outputs to interpretable quantities.
+> We regard OceanBench as a key facilitator for the uptake of MLOPs tools and research for ocean-related tasks and case studies with genuine ocean data.
 
 ## Motivation
 
@@ -76,6 +76,17 @@ However, eventually, we need have a coupled system where we can reuse the indepe
 
 
 ---
+## Tasks
+
+```{mermaid}
+graph LR
+    Interpolation --> Data-Assimilator
+    Surrogate --> Data-Assimilator
+    Data-Assimilator --> Forecasting
+```
+
+
+---
 ## Experiment Types
 
 
@@ -87,8 +98,4 @@ However, eventually, we need have a coupled system where we can reuse the indepe
 
 ---
 ## Code-Base Design
-
-
----
-## Data
 

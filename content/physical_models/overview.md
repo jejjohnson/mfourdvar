@@ -1,5 +1,5 @@
 ---
-title: Physical Models
+title: Overview
 subject: Modern 4DVar
 subtitle: Can we learn to emulate physical models from simulations?
 short_title: Overview
@@ -18,4 +18,9 @@ abbreviations:
     SW: Shallow Water
 ---
 
-We can look at the [GLORYS](https://www.mercator-ocean.eu/en/ocean-science/glorys/) product
+```{mermaid}
+graph TD
+    Interpolators --> Variational-Solver
+    Differentiable-Models --> Variational-Solver
+    Surrogate-Models --> Variational-Solver
+```
