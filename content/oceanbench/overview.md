@@ -78,7 +78,13 @@ However, eventually, we need have a coupled system where we can reuse the indepe
 ---
 ## Tasks
 
+There are a number of objectives that we can envision that can be implemented with OceanBench.
+Ultimately, we are interested in tasks that pertain to the Mercato space.
+This boils down to two main tasks: 1) **Interpolation** and 2) **Forecasting**.
+We outline them in more detail below.
 
+
+---
 ### Interpolation
 
 ```{mermaid}
@@ -87,6 +93,15 @@ graph LR
     Surrogate-Model --> Data-Assimilator
 ```
 
+The interpolation task will involving using sparse, gappy observations from different sources to produce a full map that is physically consistent.
+Logistically, this will involve aggregating as many observations as possible and then projecting them onto a grid using an interpolator or a surrogate.
+From research (**TOCITE**), we know that the best methods will need to use physics-informed decisions. 
+The main ways which can involve using specialized data structures and architectures, targeted loss functions, or training on historical simulations.
+
+Interpolation methods can work "out-of-the-box" where minimal tuning is needed.
+However, more elaborate methods need to be trained on OSSE experiments using reanalysis data.
+
+---
 ### Forecasting
 
 ```{mermaid}
@@ -94,6 +109,11 @@ graph LR
     Surrogate-Model --> Forecasting
 ```
 
+The forecasting task will involving using currently assimilated data and then predicting a map forward in time.
+Logistically, this will involve training a surrogate model that is able to take a map (or sequency of sequential maps), and then predict a specified time step forward in time.
+The hope is that this prediction is physically consistent.
+
+To obtain such a model, one would need to train on historical reanalysis which captures the blend between physics and observations. 
 
 ---
 ## Experiment Types
