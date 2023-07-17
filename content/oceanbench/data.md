@@ -25,7 +25,7 @@ The [Marine Data Store (MDS)](https://data.marine.copernicus.eu/products) has a 
 They have raw observations that come from satellite altimeters and in-situ sources.
 There is also a reanalysis product that combines the observations and NEMO model. 
 Furthermore they have make forecasts which can be a 'free-run' product.
-All of the data listed here are available from the Copernicus project via the Marine Data store.
+All of the data listed here are available from the Copernicus project via the [MDS](https://data.marine.copernicus.eu/product/GLOBAL_REANALYSIS_PHY_001_031/description).
 
 ```{mermaid}
 graph TD
@@ -56,6 +56,8 @@ They primarily come in two forms: 1) observations from satellite altimetry and 2
 |:-----|:-----|:---------------------|:------|:------|
 | | Satellite Altimetry | SSH | | [Marine Data Store](https://data.marine.copernicus.eu/product/SEALEVEL_GLO_PHY_L3_MY_008_062/description) | |
 | | In-Situ | SSH, SST | | [Marine Data Store](https://data.marine.copernicus.eu/product/INSITU_GLO_PHYBGCWAV_DISCRETE_MYNRT_013_030/description)|
+| | | SST | | [EUMETSAT](https://www.eumetsat.int/sea-surface-temperature-services) |
+| | | SST | | [NASA](https://earthobservatory.nasa.gov/global-maps/MYD28M) |
 
 **Satellite Altimetry**.
 The satellite altimetry data is an aggregate from all available satellite altimeters [{cite}`10.48670/moi-00146`].
@@ -106,6 +108,13 @@ However, we can postulate that the rea
 **GLORYS Product**.  
 The GLORYS product has the temperature, salinity, current speed, current direction, sea-level, sea-ice extent, sea-ice concentration, and sea-ice thickness.
 
+---
+## Free-Run
+
+```{mermaid}
+graph TD
+    NEMO --> Free-Run
+```
 
 
 ---
@@ -127,11 +136,11 @@ The datasets mentioned above cover the globe at a defined resolution.
 However, the CEMS service also focuses on particular regions.
 
 | Regions | Extent |
-|:-------:|:-------:|
+|:-------|:-------:|
 | Global | |
 | Baltic Sea | |
 | Atlantic-Iberian Biscay Irish Ocean | |
-| Mediterranean Sea Physics | |
+| Mediterranean Sea | |
 | Atlantic-European North West Shelf | |
 |
 

@@ -24,6 +24,19 @@ abbreviations:
 
 ```{mermaid}
 graph LR
+    Simulation-Data --> ML-Ready-Data
+    ML-Ready-Data --> ML-Ideation
+    ML-Ideation --> ML-Ideation
+    ML-Ideation --> ML-Tool
+    ML-Tool --> MLOPs
+    ML-Tool --> Research
+    ML-Tool --> Evaluation
+    MLOPs --> Product
+```
+
+
+```{mermaid}
+graph LR
     FlowMap --> 1-Hour
     FlowMap --> 6-Hours
     FlowMap --> 12-Hours

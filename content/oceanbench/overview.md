@@ -27,8 +27,9 @@ abbreviations:
 
 ```{mermaid}
 graph LR
-    Obs-Data --> ML-Ready-Data
-    Sim-Data --> ML-Ready-Data
+    Observation-Data --> ML-Ready-Data
+    Simulation-Data --> ML-Ready-Data
+    Assimilation-Data --> ML-Ready-Data
     ML-Ready-Data --> ML-Ideation
     ML-Ideation --> ML-Ideation
     ML-Ideation --> ML-Tool
@@ -59,7 +60,6 @@ We can work directly domain experts with operational expertise to design
 ---
 ## Use Cases
 
-
 **ML Researchers**. 
 
 **Domain Experts**. We hope to reach domain experts by providing a concrete platform to buildSome of the most fruitful contributions can be:
@@ -78,11 +78,20 @@ However, eventually, we need have a coupled system where we can reuse the indepe
 ---
 ## Tasks
 
+
+### Interpolation
+
 ```{mermaid}
 graph LR
-    Interpolation --> Data-Assimilator
-    Surrogate --> Data-Assimilator
-    Data-Assimilator --> Forecasting
+    Interpolator --> Data-Assimilator
+    Surrogate-Model --> Data-Assimilator
+```
+
+### Forecasting
+
+```{mermaid}
+graph LR
+    Surrogate-Model --> Forecasting
 ```
 
 

@@ -1,5 +1,5 @@
 ---
-title: Surrogate Model Edition
+title: Forecasting Edition
 subject: Modern 4DVar
 subtitle: Can we learn 
 short_title: SSH Forecast
@@ -16,6 +16,18 @@ abbreviations:
     GCM: General Circulation Model
 ---
 
+
+```{mermaid}
+graph LR
+    Assimilation-Data --> ML-Ready-Data
+    ML-Ready-Data --> ML-Ideation
+    ML-Ideation --> ML-Ideation
+    ML-Ideation --> ML-Tool
+    ML-Tool --> MLOPs
+    ML-Tool --> Research
+    ML-Tool --> Evaluation
+    MLOPs --> Product
+```
 
 
 ```{mermaid}
