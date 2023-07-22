@@ -60,6 +60,22 @@ We can work directly domain experts with operational expertise to design
 ---
 ## Use Cases
 
+```{mermaid}
+flowchart LR
+    data[(DataLake)]
+    MLOps{MLOps}
+    OceanOps{OceanOps}
+    OceanBench(OceanBench)
+    Mercator(Mercator)
+
+    data --> OceanBench
+    OceanBench --> MLOps
+    MLOps --> OceanOps
+
+    data --> Mercator
+    Mercator --> OceanOps
+```
+
 **ML Researchers**. 
 
 **Domain Experts**. We hope to reach domain experts by providing a concrete platform to buildSome of the most fruitful contributions can be:
@@ -67,6 +83,16 @@ We can work directly domain experts with operational expertise to design
 1. Experimental Design -
 2. Evaluation Procedures - Experts can help incorporate better and more meaningful metrics that ML experts can strive to reach.
 3. Preprocessing Techniques - Experts can help , e.g. coordinate/domain transformations, denoising, variable transformations, etc.
+
+```{mermaid}
+flowchart LR
+    data[(DataLake)]
+    OceanOps{OceanOps}
+    Mercator(Mercator)
+
+    data --> Mercator
+    Mercator --> OceanOps
+```
 
 
 **Next Generation Products**. We firmly believe that OceanBench can help facilitate the design of experiments that can help build the next generation of assimilation and forecasts products.
@@ -78,6 +104,14 @@ However, eventually, we need have a coupled system where we can reuse the indepe
 ---
 ## Tasks
 
+```{mermaid}
+flowchart TD
+    Maps([Gap-Filled Maps])
+    ReMaps([Reanalysis Maps])
+    FMaps([Forecast Maps])
+
+```
+
 There are a number of objectives that we can envision that can be implemented with OceanBench.
 Ultimately, we are interested in tasks that pertain to the Mercato space.
 This boils down to two main tasks: 1) **Interpolation** and 2) **Forecasting**.
@@ -87,11 +121,7 @@ We outline them in more detail below.
 ---
 ### Interpolation
 
-```{mermaid}
-graph LR
-    Interpolator --> Data-Assimilator
-    Surrogate-Model --> Data-Assimilator
-```
+
 
 The interpolation task will involving using sparse, gappy observations from different sources to produce a full map that is physically consistent.
 Logistically, this will involve aggregating as many observations as possible and then projecting them onto a grid using an interpolator or a surrogate.
@@ -100,6 +130,8 @@ The main ways which can involve using specialized data structures and architectu
 
 Interpolation methods can work "out-of-the-box" where minimal tuning is needed.
 However, more elaborate methods need to be trained on OSSE experiments using reanalysis data.
+
+
 
 ---
 ### Forecasting
@@ -128,3 +160,97 @@ To obtain such a model, one would need to train on historical reanalysis which c
 ---
 ## Code-Base Design
 
+
+---
+## Proposed Solutions
+
+
+### Level I - Simple Interpolation
+
+```{mermaid}
+flowchart LR
+    Obs[Observations]
+    Interp{{Interpolator}}
+    Maps([Gap-Filled Maps])
+
+    Obs --> Interp
+    Interp --> Maps
+
+```
+
+
+
+### Level II - Physical Model-Based Reanalysis Maps
+
+```{mermaid}
+flowchart LR
+    Obs[Observations]
+    Maps([Gap-Filled Maps])
+    ReMaps([Reanalysis Maps])
+    Solver{{Variational Solver}}
+    PhyModel{{Physical Ocean Model}}
+
+    PhyModel --> Solver
+    Obs --> Solver
+    Maps --> Solver
+    Solver --> ReMaps
+```
+
+
+### Level III - Surrogate Model-Based Reanalysis Maps
+
+```{mermaid}
+flowchart LR
+    Obs[Observations]
+    Maps([Gap-Filled Maps])
+    ReMaps([Reanalysis Maps])
+    Solver{{Variational Solver}}
+    SurrModel{{Surrogate Model}}
+
+    SurrModel --> Solver
+    Obs --> Solver
+    Maps --> Solver
+    Solver --> ReMaps
+```
+
+
+### Level IV - Forecast Maps
+
+```{mermaid}
+flowchart LR
+    Obs[Observations]
+    Maps([Gap-Filled Maps])
+    ForeMaps([Forecast Maps])
+    SurrModel{{Surrogate Model}}
+
+    SurrModel --> ForeMaps
+    Obs --> SurrModel
+    Maps --> SurrModel
+```
+
+
+### Level V - End-to-End Systems
+
+```{mermaid}
+flowchart LR
+    Obs[Observations]
+    Interp{{Interpolator}}
+    Maps([Gap-Filled Maps])
+    ReMaps([Reanalysis Maps])
+    ForeMaps([Forecast Maps])
+    Solver{{Variational Solver}}
+    SurrModel{{Interpolative Surrogate Model}}
+    Predictor{{Predictive Surrogate Model}}
+    PhyModel{{Physical Ocean Model}}
+
+    Obs --> Interp
+    Interp --> Maps
+    Maps --> Solver
+
+    SurrModel --> Solver
+    PhyModel --> Solver
+    Solver --> ReMaps
+
+    ReMaps --> Predictor
+    Predictor --> ForeMaps
+```
