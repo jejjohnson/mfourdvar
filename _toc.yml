@@ -27,10 +27,13 @@ chapters:
       - file: content/framework/learning
   - title: Inference
     sections:
-      - file: content/inference/overview
+      - file: content/inference/inference
       - file: content/inference/vi
       - file: content/inference/gradient_learning
       - file: content/inference/bayes_cc
+  - title: Learning
+    sections:
+      - file: content/learning/learning
   - title: Physical Models
     sections:
       - file: content/physical_models/overview

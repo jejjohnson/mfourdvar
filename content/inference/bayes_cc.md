@@ -24,6 +24,7 @@ This document goes over the Bayesian formulation in relation to some of the esti
 * Temporal State and Observations
 * Temporal State, Parameters & Data
 
+---
 
 ## State & Observations
 
@@ -145,4 +146,224 @@ p(\boldsymbol{u}|\boldsymbol{z},\boldsymbol{\theta}) =
 \int p(\boldsymbol{u}|\boldsymbol{z},\boldsymbol{\theta})
 p(\boldsymbol{z}|\boldsymbol{\theta}|\boldsymbol{y})
 d\boldsymbol{z}
+$$
+
+
+---
+
+## State-Space Model and Observations
+
+```{mermaid}
+graph TD
+    z0 --> z1 --> z2
+    z1 --> y1
+    z2 --> y2
+    z1 --> u1
+    z2 --> u2
+```
+
+In this example, we have a state space model and some observations.
+So we break up the **Joint Distribution** into a temporal discretization.
+
+$$
+p(\boldsymbol{z},\boldsymbol{y}|\boldsymbol{\theta}) =
+p(\boldsymbol{z}_{0:T},\boldsymbol{y}_{1:T}|\boldsymbol{\theta})
+$$
+
+
+So our new Bayesian decomposition of the **joint distribution** is given by
+
+$$
+\begin{aligned}
+p(\boldsymbol{z}_{0:T},\boldsymbol{y}_{1:T}|\boldsymbol{\theta}) &=
+p(\boldsymbol{y}_{1:T}|\boldsymbol{z}_{0:T},\boldsymbol{\theta})
+p(\boldsymbol{z}_{0:T}|\boldsymbol{\theta}) \\
+&=
+p(\boldsymbol{z}_{0:T}|\boldsymbol{y}_{1:T},\boldsymbol{\theta})
+p(\boldsymbol{y}_{1:T})
+\end{aligned}
+$$
+
+where we have a prior distribution defined as a dynamical model, a likelihood model for the measurements (and we will have a normalization constant).
+
+
+Here, we have the following assumptions for the relationships
+
+$$
+\begin{aligned}
+\text{Prior}: && \boldsymbol{z}_0 
+&\sim p(\boldsymbol{z}_0|\boldsymbol{\theta}) \\
+\text{Transition}: && \boldsymbol{z}_{t}
+&\sim p(\boldsymbol{z}_{t}|\boldsymbol{z}_{t-1},\boldsymbol{\theta}) \\
+\text{Emission}: && \boldsymbol{y}_t
+&\sim p(\boldsymbol{y}_t|\boldsymbol{z}_t,\boldsymbol{\theta})
+\end{aligned}
+$$
+
+
+
+So we can decompose the distributions listed above as
+
+$$
+p(\boldsymbol{z}_{0:T},\boldsymbol{y}_{1:T}|\boldsymbol{\theta})= p(\boldsymbol{z}_0)
+\prod_{t=1}^Tp(\boldsymbol{z}_t|\boldsymbol{z}_{t-1})
+\prod_{t=1}^Tp(\boldsymbol{y}_t|\boldsymbol{z}_t)\\
+$$
+
+**State Posterior**
+
+$$
+\begin{aligned}
+p(\boldsymbol{z}_{0:T}|\boldsymbol{y}_{1:T},\boldsymbol{\theta}) &=
+\frac{p(\boldsymbol{y}_{1:T}|\boldsymbol{z}_{0:T},\boldsymbol{\theta})
+p(\boldsymbol{z}_{0:T}|\boldsymbol{\theta})}{p(\boldsymbol{y}_{1:T})} 
+\end{aligned}
+$$
+
+**Evidence**
+
+$$
+\begin{aligned}
+p(\boldsymbol{y}_{1:T}) &= \int
+p(\boldsymbol{y}_{1:T}|\boldsymbol{z}_{0:T},\boldsymbol{\theta})
+p(\boldsymbol{z}_{0:T}|\boldsymbol{\theta})
+d\boldsymbol{z}_{0:T} \\
+&= \int p(\boldsymbol{z}_0)
+\prod_{t=1}^Tp(\boldsymbol{y}_t|\boldsymbol{z}_t)
+d\boldsymbol{z}_t
+\end{aligned}
+$$
+
+
+**Predictive Posterior Distribution**
+
+$$
+p(u_{1:T}|z_{0:T}) = \int
+p(u_{1:T}|z_{1:T})p(z_{1:T}|y_{1:T},\theta)
+p(z_0|\theta)dz_{0:T}
+$$
+
+**Other Quantities**
+
+$$
+\begin{aligned}
+\text{Filtering Dist}: && p(z_t|y_{1:t}) \\
+\text{Predictive Dist}: && p(z_{t+\tau}|y_{1:t}) \\
+\text{Smoothing Dist}: && p(z_t|y_{1:T})
+\end{aligned}
+$$
+
+
+---
+
+## Parameters, State-Space Model, & Observations
+
+In this example, we have a state space model and some observations.
+So we break up the **Joint Distribution** into a temporal discretization.
+
+$$
+p(\boldsymbol{z},\boldsymbol{y},\boldsymbol{\theta}) =
+p(\boldsymbol{z}_{0:T},\boldsymbol{y}_{1:T},\boldsymbol{\theta})
+$$
+
+
+So our new Bayesian decomposition of the **joint distribution** is given by
+
+$$
+\begin{aligned}
+p(\boldsymbol{z}_{0:T},\boldsymbol{y}_{1:T}|\boldsymbol{\theta}) &=
+p(\boldsymbol{y}_{1:T}|\boldsymbol{z}_{0:T},\boldsymbol{\theta})
+p(\boldsymbol{z}_{0:T}|\boldsymbol{\theta})p(\theta) \\
+&=
+p(\boldsymbol{z}_{0:T}|\boldsymbol{y}_{1:T},\boldsymbol{\theta})
+p(\boldsymbol{y}_{1:T})
+\end{aligned}
+$$
+
+where we have a prior distribution defined as a dynamical model, a likelihood model for the measurements (and we will have a normalization constant).
+
+
+Here, we have the following assumptions for the relationships
+
+$$
+\begin{aligned}
+\text{Prior Parameters}: && \boldsymbol{\theta}
+&\sim p(\boldsymbol{\theta}) \\
+\text{Prior State}: && \boldsymbol{z}_0 
+&\sim p(\boldsymbol{z}_0|\boldsymbol{\theta}) \\
+\text{Transition}: && \boldsymbol{z}_{t}
+&\sim p(\boldsymbol{z}_{t}|\boldsymbol{z}_{t-1},\boldsymbol{\theta}) \\
+\text{Emission}: && \boldsymbol{y}_t
+&\sim p(\boldsymbol{y}_t|\boldsymbol{z}_t,\boldsymbol{\theta})
+\end{aligned}
+$$
+
+
+
+So we can decompose the distributions listed above as
+
+$$
+p(\boldsymbol{z}_{0:T},\boldsymbol{y}_{1:T}|\boldsymbol{\theta})= 
+p(\theta)p(\boldsymbol{z}_0|\theta)
+\prod_{t=1}^Tp(\boldsymbol{z}_t|\boldsymbol{z}_{t-1},\theta)
+\prod_{t=1}^Tp(\boldsymbol{y}_t|\boldsymbol{z}_t,\theta)\\
+$$
+
+**Joint Posterior**
+
+$$
+\begin{aligned}
+p(\boldsymbol{z}_{0:T},\boldsymbol{\theta}|\boldsymbol{y}_{1:T}) &=
+\frac{p(\boldsymbol{y}_{1:T}|\boldsymbol{z}_{0:T},\boldsymbol{\theta})
+p(\boldsymbol{z}_{0:T}|\boldsymbol{\theta})p(\theta)}{p(\boldsymbol{y}_{1:T})} 
+\end{aligned}
+$$
+
+**Evidence**
+
+$$
+\begin{aligned}
+p(\boldsymbol{y}_{1:T}) &= \int\int
+p(\boldsymbol{y}_{1:T}|\boldsymbol{z}_{0:T},\boldsymbol{\theta})
+p(\boldsymbol{z}_{0:T}|\boldsymbol{\theta})p(\theta)
+d\boldsymbol{z}_{0:T}d_\theta \\
+&= \int\int p(\theta)p(\boldsymbol{z}_0)
+\prod_{t=1}^Tp(\boldsymbol{y}_t|\boldsymbol{z}_t)
+d\boldsymbol{z}_td\theta
+\end{aligned}
+$$
+
+
+**Predictive Posterior Distribution (State)**
+
+$$
+p(\theta|y_{1:T}) = \int p(z_{0:T},\theta|y_{1:T})p(\theta)dz_{0:T}
+$$
+
+**Predictive Posterior Distribution (Parameters)**
+
+$$
+p(z_{0:T}|y_{1:T}) = \int p(z_{0:T},\theta|y_{1:T})p(\theta)d\theta
+$$
+
+**Predictive Posterior Distribution (QoI)**
+
+$$
+\begin{aligned}
+\text{State \& Parameters}: &&
+p(u_{1:T}|z_{0:T},\theta) &= \int 
+p(u_{1:T}|z_{0:T},\theta)
+p(\boldsymbol{z}_{0:T},\boldsymbol{\theta}|\boldsymbol{y}_{1:T})p(\theta)
+dz_{0:T}d\theta\\
+\text{State}: &&
+p(u_{1:T}|z_{0:T}) &= \int 
+p(u_{1:T}|z_{0:T})
+p(\boldsymbol{z}_{0:T}|\boldsymbol{y}_{1:T})
+dz_{0:T}\\
+\text{Parameters}: &&
+p(u_{1:T}|\theta) &= \int 
+p(u_{1:T}|\theta)
+p(\theta|\boldsymbol{y}_{1:T})
+d\theta\\
+\end{aligned}
 $$

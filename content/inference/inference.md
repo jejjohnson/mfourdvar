@@ -16,6 +16,17 @@ abbreviations:
     GP: Gaussian Process
 ---
 
+
+* **Sampling**
+* MLE & MAP
+* Laplace Approximation
+* Variational Inference
+
+
+
+
+---
+
 Traditionally, we like to think that we can estimate ... via the Empirical Risk Minimization (ERM) criteria given by
 
 $$
