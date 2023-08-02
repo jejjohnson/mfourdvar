@@ -40,6 +40,7 @@ chapters:
       - file: content/physical_models/diff_models
       - file: content/physical_models/ogcm
       - file: content/physical_models/qg
+      - file: content/physical_models/sw
   - title: Model Choices
     sections:
       - file: content/model_choices/representation
