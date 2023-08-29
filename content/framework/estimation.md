@@ -1,8 +1,8 @@
 ---
-title: Estimation Problem
+title: Estimation Problems
 subject: Modern 4DVar
 subtitle: How to think about modern 4DVar formulations
-short_title: Estimation Problem
+short_title: Estimation Problems
 authors:
   - name: J. Emmanuel Johnson
     affiliations:

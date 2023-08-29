@@ -62,3 +62,23 @@ This is a set of code bases that were used to design an end-to-end learning syst
 **[Lineax](https://docs.kidger.site/lineax/)** - linear solvers with JAX.
 
 **[TorchOpt](https://torchopt.readthedocs.io/en/latest/)**
+
+
+### Simple Ocean Models
+
+* pyQG - {cite}`10.5281/zenodo.6563667`
+* jax-cfd - {cite}`10.1073/pnas.2101784118,10.48550/ARXIV.2207.00556`
+
+**GCMs**
+
+* veros - {cite}`10.5194/gmd-11-3299-2018`
+* Oceananigans - {cite}`10.21105/joss.02018`
+
+
+
+### Data Assimilation
+
+* NCAR DART - {cite}`10.5065/D6WQ0202,10.1175/2009BAMS2618.1`
+* https://www.jcsda.org/jcsda-project-jedi
+* https://dj4earth.github.io/
+* http://soca.jcsda.org/master/obs/

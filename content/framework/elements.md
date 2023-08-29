@@ -1,8 +1,8 @@
 ---
-title: Problem Structure
+title: Components/Elements
 subject: Modern 4DVar
 subtitle: How to think about the problem structure.
-short_title: Problem Structure
+short_title: Components/Elements
 authors:
   - name: J. Emmanuel Johnson
     affiliations:

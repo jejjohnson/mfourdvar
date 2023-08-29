@@ -1,8 +1,8 @@
 ---
 title: Learning to Learn
 subject: Modern 4DVar
-subtitle: Using Neural Networks to learn the best path to solution
-short_title: Gradient Learning
+subtitle: How can we use nested learning schemes to speed up optimization?
+short_title: Meta-Learning
 authors:
   - name: J. Emmanuel Johnson
     affiliations:
@@ -17,6 +17,17 @@ abbreviations:
 ---
 
 
+## General Formulation
+
+
+## Whirlwind Tour
+
+### Optimized-Based
+
+---
+## LSTM Meta-Optimizer
+
+We will pay special attention to the 
 
 ```{mermaid}
 graph LR

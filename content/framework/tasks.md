@@ -37,6 +37,11 @@ abbreviations:
 
 #### Forecasting
 
+[{cite}`10.1038/s41467-022-32483-x,10.48550/arXiv.2212.12794,10.48550/arXiv.2302.10364`]
+
+* {cite}`10.48550/arXiv.2304.07029`
+* {cite}`10.48550/arXiv.2306.05014`
+
 
 
 ---
@@ -54,3 +59,4 @@ abbreviations:
 ## Digital Twin
 
 > The all inclusive system
+

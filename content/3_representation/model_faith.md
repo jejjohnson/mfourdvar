@@ -1,8 +1,8 @@
 ---
-title: Learning Problem
+title: Model Assumptions
 subject: Modern 4DVar
-subtitle: How to think about modern 4DVar formulations
-short_title: Learning
+subtitle: How dynamical systems make up the world
+short_title: Known, Unknown, Hybrid
 authors:
   - name: J. Emmanuel Johnson
     affiliations:
@@ -13,13 +13,6 @@ authors:
 license: CC-BY-4.0
 keywords: data-assimilation, open-science
 abbreviations:
-    GP: Gaussian Process
 ---
-
-
-
----
-## Gradient Learning
-
 
 

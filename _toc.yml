@@ -21,19 +21,38 @@ chapters:
   - title: Framework
     sections:
       - file: content/framework/tasks
-      - file: content/framework/problem_decisions
-      - file: content/framework/problem
+      - file: content/framework/elements
+      - file: content/framework/connections
+      - file: content/framework/representation
       - file: content/framework/estimation
-      - file: content/framework/learning
+  - title: Data & Model Representations
+    sections:
+      - file: content/3_representation/overview_rep
+      - file: content/3_representation/dynamical_system
+      - file: content/3_representation/continuous
+      - file: content/3_representation/discrete
+      # - file: content/3_representation/model_faith
   - title: Inference
     sections:
       - file: content/inference/inference
       - file: content/inference/vi
-      - file: content/inference/gradient_learning
-      - file: content/inference/bayes_cc
-  - title: Learning
+      - file: content/inference/optimization
+      - file: content/inference/blr
+      - file: content/inference/bilevel_opt
+      - file: content/inference/meta_learning
+  - title: Physics-Inspired
     sections:
-      - file: content/learning/learning
+      - file: content/pinns/pinns
+      - file: content/pinns/pinns_data
+      - file: content/pinns/pinns_architecture
+      - file: content/pinns/pinns_loss
+  - title: Uncertainty
+    sections:
+      - file: content/uncertainty/uncertainty
+      - file: content/uncertainty/uncertain_data
+      - file: content/uncertainty/uncertain_model
+      - file: content/uncertainty/uncertain_params
+      - file: content/uncertainty/uncertain_estimation
   - title: Physical Models
     sections:
       - file: content/physical_models/overview
@@ -41,11 +60,6 @@ chapters:
       - file: content/physical_models/ogcm
       - file: content/physical_models/qg
       - file: content/physical_models/sw
-  - title: Model Choices
-    sections:
-      - file: content/model_choices/representation
-      - file: content/model_choices/physics_informed
-      - file: content/model_choices/uncertainty
   - title: Examples
     sections:
       - file: content/examples/state_estimation
@@ -68,3 +82,7 @@ chapters:
     sections:
       - file: content/resources/code
       - file: content/resources/papers
+  - title: Appendix
+    sections:
+      - file: content/inference/bayes_cc
+      - file: content/appendix/problem_decisions
