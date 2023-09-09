@@ -84,5 +84,6 @@ chapters:
       - file: content/resources/papers
   - title: Appendix
     sections:
+      - file: content/appendix/definitions
       - file: content/inference/bayes_cc
       - file: content/appendix/problem_decisions
