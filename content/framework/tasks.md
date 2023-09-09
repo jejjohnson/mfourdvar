@@ -14,13 +14,21 @@ license: CC-BY-4.0
 keywords: data-assimilation, open-science
 abbreviations:
     GP: Gaussian Process
+    PI: Principle Investigator
 ---
 
 
 > This walks through the though process 
 
 
+A problem I have encountered when trying to solve problems is that I'm almost never clear what is the actual problem is.
 
+**Methodology Driven**.
+This is especially problematic in my academic community.
+Perhaps the PI can remember why we're doing what we're doing because they wrote the proposal.
+However, I would also suspect that many times they are methodology driven and are using the objective to justify pursuing the methodology.
+I don't think there is anything wrong with this.
+However, I do believe that the majority of the people who are **not** from the exact same background, within the exact same circles, would have a lot of difficulties getting behind their proposals.
 
 ## Objective
 
@@ -37,7 +45,8 @@ One could easily have a hierarchy of decisions where we have the general decisio
 
 **Understanding**.
 This is the action you need to take to understand something.
-This could be thought of as the 
+This could be thought of as the scientific method.
+In this case, we make a hypothesis, and verify that the hypothesis is consistent with real measurements (to the best of our abilities).
 
 **Just-Because**.
 I think we should give an honourary mention to this objective. 
