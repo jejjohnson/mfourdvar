@@ -30,6 +30,9 @@ However, I would also suspect that many times they are methodology driven and ar
 I don't think there is anything wrong with this.
 However, I do believe that the majority of the people who are **not** from the exact same background, within the exact same circles, would have a lot of difficulties getting behind their proposals.
 
+I also think this can be even problematic because it is much harder to follow someones justification of their methodology if they aren't originally motivated by the problem. 
+I get the feeling that we are students who kind of *memorized* the procedure but we were never shown the motivation for the decisions made to create the formulation to solve the problem.
+
 ## Objective
 
 > “The currency of our current age is authenticity.” - Robert 
