@@ -46,6 +46,22 @@ As shown by all of these methods, we are always dealing with optimization scheme
 However, for state estimation in particular, this can be very expensive and memory consuming because we are dealing with high-dimensional state-space systems.
 In addition, we need a quick way to do transfer learning
 
+
+---
+## When to use which one?
+
+**VI Can Give Accurate Answers**. The family can determine how accuracy answers you can obtain. Example: MF isn't very good. However, it's very scalable. I'll get many things wrong but some things correct. The objective function can (forward or reverse KL) also influence.
+
+**You Don't Need Accurate Inference**. More Data + Sophisticated Model, Less Accurate Inference, e.g. Deep learning. You're on a computational budget.
+
+**Open Question**. Which regime we're in? How do we diagnosis VI?
+
+**Bayesian Workflow**. 
+You use cheap computation in the beginning, you refine the model, you repeat with cheap inference. 
+Once the Model is more refined, then one can run the heavy sampling methods like MCMC.
+
+**Source**: This is taken from the [podcast](https://www.youtube.com/watch?v=wEKqznbHHQw). 
+
 ---
 
 Traditionally, we like to think that we can estimate ... via the Empirical Risk Minimization (ERM) criteria given by

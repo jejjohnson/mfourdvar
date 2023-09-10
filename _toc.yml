@@ -25,12 +25,23 @@ chapters:
       - file: content/framework/connections
       - file: content/framework/representation
       - file: content/framework/estimation
-  - title: Data & Model Representations
+  - title: Data Representations
     sections:
-      - file: content/3_representation/overview_rep
-      - file: content/3_representation/dynamical_system
-      - file: content/3_representation/continuous
-      - file: content/3_representation/discrete
+      - file: content/data/overview
+      - file: content/data/geometry
+      - file: content/data/continuous
+      - file: content/data/discrete
+      - file: content/data/parameterized
+      - file: content/data/heterogeneous
+      - file: content/data/geo_ds
+  - title: Model Representations
+    sections:
+      - file: content/model/overview_rep
+      - file: content/model/operators
+      - file: content/model/space_time
+      # - file: content/3_representation/discrete
+      - file: content/model/data_assimilation
+      - file: content/model/ml_whirlwind
       # - file: content/3_representation/model_faith
   - title: Inference
     sections:
