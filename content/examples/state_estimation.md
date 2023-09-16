@@ -124,15 +124,22 @@ $$
 
 
 
-**Strong Constrained**. The strong-constrained version works by applying the solver directly through the entire trajectory from start to finish. We are sure to output the state during moments of the trajectory to ensure that we can check to ensure that we can check out how well they match the observations. So, the function will look something like:
+---
+## Weak vs Strong Constrained
+
+In the data assimilation community, they work with dynamical models for state and parameter estimation.
+There, they are know that the models are incomplete and only approximate the true physics. 
+To reflect their uncertainty of the model on the problem, there is a notion of *weak constrained* vs *strong constrained*.
+
+Recall, many `ODESolvers` use some autoregressive-like time stepper that incrementally approximates the evolution of the fields initial state, $\boldsymbol{u}_0$, from $t=0$ until $t=T$ as see in equation [](#eq:timestepper). 
+This works by applying the `TimeStepper` function on the field recursively starting with $t=0$ until it reaches the target time $t=t+\Delta t$ as see in equation [](#eq:timestepper-increment).
+
+The DA community make the distinction between whether or not we apply the time window $\mathcal{T}=[0,T]$ or do we apply it incrementally $\mathcal{T}=\{[t,t+\Delta t], [t+\Delta t, t+2\Delta t], \ldots, \}$. 
+We outline both of them in more detail below.
+
+**Strong Constrained**. The strong-constrained version works by applying the solver directly through the entire trajectory from start, $t=0$, to finish, $t=T$. We are sure to output the state during moments of the trajectory to ensure that we can check to ensure that we can check out how well they match the observations. So, the function will look something like:
 
 
-We define our time vector with all of the time intervals where we want out output state.
-
-$$
-\mathbf{T} = 
-\left[t_0, t_{\Delta t}, t_{2\Delta t}, \ldots,  t_{T-2\Delta t}, t_{T-\Delta t}, t_{T}\right]
-$$
 
 We pass this along with our equation of motion, initial condition and boundary conditions into our `TimeStepper` function
 
@@ -159,12 +166,131 @@ $$
 ||\boldsymbol{u}_t - \boldsymbol{\Phi}(\boldsymbol{u};\boldsymbol{\theta})||_2^2
 $$
 
+**Weak Constrained**. The weak-constrained version works as a "one-step" prediction whereby we step through the trajectory with the ODE solver one at a time up to a designated output. We are sure to output the state during moments of the trajectory to ensure that we can check to ensure that we can check out how well they match the observations. 
 
-**Examples**:
+We pass this along with our equation of motion, initial condition and boundary conditions into our `TimeStepper` function
 
-* Lorenz-63
-    * JAX Implementation (Emmanuel) - Weak Constrained | Strong Constrained
-    * PyTorch Implementation (Ronan) - Weak & Strong Constrained
+$$
+\boldsymbol{\Phi}(\boldsymbol{u};\boldsymbol{\theta}) = 
+\text{TimeStepper}\left( \boldsymbol{F}, t_0, t_1, \Delta t, \boldsymbol{u}_0, \boldsymbol{u}_b,\boldsymbol{\theta}\right)
+$$
+
+The output of this solver will be the field, $\hat{\boldsymbol{u}}_t\in\mathbb{R}^{D_u}$, as the solution to our time stepper. Our subsequent cost function will be
+
+$$
+\mathbf{R}(\boldsymbol{u};\boldsymbol{\theta}) =
+\frac{1}{2\sigma^2}
+\sum_{t=1}^T
+||\boldsymbol{u}_t - \boldsymbol{\Phi}(\boldsymbol{u};\boldsymbol{\theta})||_2^2
+$$
+
+
+---
+### Pseudo-Code
+
+<!-- :::{tip} Pseudo-Code - ODE Solver
+:class: dropdown -->
+
+Let's initialize all of the pieces that we are going to need from the weak-constrained formulation
+
+```python
+# initialize inputs
+u0: Array["T-1"] = ...
+params: PyTree = ...
+F: Callable = ...
+```
+
+Recall the equation for a single stepper as [](#eq:timestepper-increment).
+We can write some pseudo-code to define our custom `TimeStepper` like so:
+
+```python
+# initialize integral solver, e.g. Euler, Runga-Kutta, Adam-Bashforth
+integral_solver: Callable = ...
+
+def time_stepper(u, params, t0, t1):
+  
+    # calculate the increment (the integral)
+    u_increment = integral_solver(F, u, params, t0, t1)
+
+    # add increment to initial condition
+    u += u_increment
+    return u
+```
+
+Here, we are only calculating the solution to the ODE between $t$ and $t +\Delta t$.
+To calculate the recursive step to calculate the full solution to the ODE from equation [](#eq:timestepper), we can do it manually by defining a time vector, $\mathbf{t}$, with all of the time intervals where we want out output state, $\boldsymbol{u}_t$.
+
+\begin{align}
+\mathbf{t} &= 
+\left[t_0, t_{\Delta t}, t_{2\Delta t}, \ldots,  t_{T-2\Delta t}, t_{T-\Delta t}, t_{T}\right] \in \mathbb{R}^T \\
+\mathbf{u} &= 
+\left[ u_0, u_1, u_3, \ldots, u_{T-2}, u_{T-1} \right] \in \mathbb{R}^{T-1} \\
+\end{align}
+
+Now we can apply our `time_stepper` function recursively.
+
+```python
+# initialize time steps
+time_steps: Array["T"] = jnp.arange(0, T, dt)
+
+# partition into start times and end times
+t0s: Array["T-1"] = time_steps[:-1]
+t1s: Array["T-1"] = time_steps[1:]
+
+# initialize initial conditions
+u0s: Array["T-1"] = ...
+
+# initialize solutions
+u_solutions: List = []
+
+# loop through list of time steps
+for u0, t0, t1 in zip(u0s, t0s, t1s):
+    # time step
+    u: Array[""] = time_stepper(F, u0, t0, t1, params)
+    # store the solutions
+    u_solutions.append(u)
+
+# concatenate the solutions
+u_solutions: Array["T-1"] = jnp.stack(u_solutions, axis=0)
+```
+
+Again, most modern functions have this functionality built into the software. 
+So we only have to call it on the initial condition.
+However, in this case, we need to be careful because it is no longer recursive.
+We can `jaxify` it to treat it like vectors.
+
+```python
+# initialize time steps
+dt = 0.01
+
+# do everything in one shot.
+fn: Callable = lambda u0, t0, t1: package.time_stepper(F, u0, params, t0=0, t1=t1, dt=dt)
+
+# apply it as if it were batches of points.
+u: Array["T-1"] = jax.vmap(fn, in_axes=(0,0,0))(u0s, t0s, t1s)
+```
+
+Using the advanced functionality, we can apply this same method to a function with more functionality to save custom outputs. 
+In this case, we only need to store the last time step for each of the increments.
+
+```python
+# initialize time steps
+dt = 0.01
+
+# time steps for saving the output vector
+dt_saved = 0.1
+saved_time_steps = jnp.arange(0, T, dt_saved)
+
+# do everything in one shot.
+fn: Callable = lambda u0, t0, t1, saveas: package.time_stepper(F, u0, params, t0=0, t1=t1, dt=dt, saveas)
+
+# do everything in one shot.
+u: Array["T-1"] = jax.vmap(fn, in_axes=(0,0,0))(u0s, t0s, t1s, t1s)
+```
+
+<!-- ::: -->
+
+
 
 
 ---

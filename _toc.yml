@@ -46,6 +46,7 @@ chapters:
   - title: Inference
     sections:
       - file: content/inference/inference
+      - file: content/inference/regression_objective
       - file: content/inference/vi
       - file: content/inference/optimization
       - file: content/inference/blr

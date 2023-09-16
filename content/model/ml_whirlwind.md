@@ -14,3 +14,21 @@ keywords: data-assimilation, open-science
 abbreviations:
 ---
 
+
+```{list-table} This table showcases a few ways to parameterize a model.
+:header-rows: 1
+:name: tb:model-architecture-whirlwind
+
+* - Parameterization
+  - Equation
+* - Linear
+  - $\mathbf{Wx} + \mathbf{b}$
+* - Basis Function
+  - $\mathbf{W}\boldsymbol{\phi}(\mathbf{x})+\mathbf{b}$
+* - Non-Linear Function
+  - $\sigma\left(\mathbf{Wx}+\mathbf{b}\right)$
+* - Neural Network
+  - $\sigma\left(\mathbf{Wx}+\mathbf{b}\right)$
+* - Functional
+  - $p(\boldsymbol{f}(\cdot))\sim \mathcal{GP}$
+```

@@ -174,15 +174,15 @@ $$
   - Time Stepper
   - QG + RK4 Scheme
 * - Surrogate
-  - Neural Network 1
-  - Neural Network 2
-  - Neural Flows [{cite}`10.48550/arXiv.2110.13040`]
+  - Spatial NN Operator
+  - Temporal NN Operator
+  - Neural Flows [{cite}`10.48550/arXiv.2110.13040`], PDE-Refiner [{cite}`10.48550/arXiv.2308.05732`], Message Passing PDE [{cite}`10.48550/arXiv.2202.03376`]
 * - Surrogate
-  - Neural Network
-  - Neural Network
-  - [NerFs](https://neuralfields.cs.brown.edu/), ConvLSTM, FNO [{cite}`10.48550/arXiv.2108.08481`], CORAL [{cite}`10.48550/arXiv.2306.07266`]
+  - Spatiotemporal NN Operator
+  - " "
+  - [NerFs](https://neuralfields.cs.brown.edu/), ConvLSTM [{cite}`10.48550/arXiv.1506.04214`], FNO [{cite}`10.48550/arXiv.2108.08481`], CORAL [{cite}`10.48550/arXiv.2306.07266`]
 * - Hybrid
-  - Neural Network
+  - Spatial NN Operator
   - TimeStepper
   - Neural ODE [{cite}`10.48550/arXiv.2202.02435`]
 * - Hybrid
@@ -192,7 +192,7 @@ $$
 * - Hybrid
   - Finite Der. + NN
   - TimeStepper
-  - UDE [{cite}`10.48550/arXiv.2001.04385`]
+  - Universal Differential Equations [{cite}`10.48550/arXiv.2001.04385`]
 * - Hybrid
   - Finite Der. + NN
   - TimeStepper + NN
