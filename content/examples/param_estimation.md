@@ -37,15 +37,22 @@ p(\mathcal{M}|\mathcal{D}) =
 {p(\mathcal{D})}
 $$
 
-In the case of geosciences, we are often given an ordered, temporal sequence of observations.
+In the case of geosciences, we are given a discrete set of observations
 
 $$
-\mathcal{D} = \left\{ \boldsymbol{y}_t \right\}_{t=1}^T
+\mathcal{D} = \left\{ \boldsymbol{y}_t \right\}_{t=1}^T, \hspace{5mm}
+\boldsymbol{y}_t=\boldsymbol{y}(t), \hspace{5mm} 
+t\in\mathcal{T}\subseteq\mathbb{R}^+
 $$
 
-This sequence could be a:
+where $\mathcal{T}=\left\{ \right\}$
+
+
+This observations could be a:
 * 1D time series of sea surface temperature values at a particular location
 * 2D+T spatiotemporal time series of sea surface height within the gulfstream.
+
+
 
 Our task is to find some parameterized model that is able to fit this sequence of observations
 
@@ -93,22 +100,24 @@ $$
 
 where $Z$ is the evidence, $Z=\int p(\mathcal{D}|\boldsymbol{\theta})p(\boldsymbol{\theta})d\boldsymbol{\theta}$.
 
-Due to our definition of the Gaussian likelihood, we can use the conjugate posterior which would allow for simpler inference. 
+Due to our definition of the Gaussian likelihood as implicitly defined in the observation model [](#eq:dynamical-system), we can use the conjugate posterior which would allow for simpler inference. 
 We can write this as
 
 $$
 p(\boldsymbol{\theta}|\mathcal{D}) \propto 
 \exp\left( -\mathcal{L}\left(\boldsymbol{\theta}\right) \right)
-$$
+$$ (eq:map-estimation)
 
-which is connected to the Gibbs distribution. 
+where $\mathcal{L}(\boldsymbol{\theta})$ is the energy function.
+This shows that the posterior distribution is shown to be proportional to the log-loss of the energy function $\mathcal{L}(\boldsymbol{\theta})$.
 
 
 ---
 
 ### Loss Function
 
-We are left with the maximum likelihood loss function
+We define the solution as the best parameters, $\boldsymbol{\theta}^*$, that minimizes the posterior distribution, $p(\boldsymbol{\theta}|\mathcal{D})$. 
+However, given equation [](#eq:map-estimation), we can simply minimize the log-loss function $\mathcal{L}(\boldsymbol{\theta})$.
 
 $$
 \boldsymbol{\theta}^* = \underset{\boldsymbol{\theta}}{\text{argmin}}
@@ -116,21 +125,42 @@ $$
 \mathcal{L}(\boldsymbol{\theta})
 $$
 
-where the loss function is equal to
+In this example, we will use the loss function that takes the expectation over the dataset population, $p(\mathcal{D})$. 
+We can write this as
+
+$$
+\mathcal{L}(\boldsymbol{\theta}) = \mathbb{E}_{\boldsymbol{y}\sim p(\mathcal{D})}
+\left[ - \log p(\boldsymbol{y}|\boldsymbol{\theta})\right]
+$$
+
+We don't have the true data distribution as we only have some discrete samples along the time domain. 
+So we can empirically approximate this expectation as:
+
+$$
+\mathcal{L}(\boldsymbol{\theta}) = 
+\sum_{y\in \mathcal{T}}
+\left[ - \log p(\boldsymbol{y}|\boldsymbol{\theta})\right]
+$$
+
+
+Lastly, from our definition of our dynamical system in equation [](#eq:dynamical-system), we can see that the likelihood is given by the dynamical model and the observation model; a composition of the two functions.
+We can write down the loss function as:
 
 $$
 \begin{aligned}
 \mathcal{L}(\boldsymbol{\theta}) = 
-\frac{1}{2\sigma^2}\sum_{t=1}^T
+\frac{1}{2\sigma^2}\sum_{t\in\mathcal{T}}
 ||\boldsymbol{y}_t - \boldsymbol{H}\circ \boldsymbol{\Phi}\left(\boldsymbol{u}_0, t; \boldsymbol{\theta}\right)||^2_{2}
 \end{aligned}
 $$
 
 
-
+**Note**: these are very broad assumptions about the data likelihood term. 
+We could introduce more assumptions to account for uncertainty like a prior on the parameters or a diagonal/full covariance matrix for the noise level.
 
 
 ---
+
 ## Dynamical Model 
 
 The dynamical system shown in equation [](#eq:dynamical-system) is the corner stone of ODEs and PDEs.
@@ -290,56 +320,92 @@ We can use the same learning scheme shown above to try and fit the best paramete
 
 ### Pseudo-Code
 
+First, we need to get our dataset of observations.
+
+```python
+# get observations
+y_obs: Array["T"] = ...
+ts: Array["T"] = ...
+```
+
+Then, we need to define our pde and parameters.
+In this section, we do not need to care explicitly about the PDE we choose.
+We will outline a few concrete ODEs/PDEs in the next section.
+
 
 ```python
 # initialize pde rhs function, e.g. L63, L96, QG
-pde_params: PyTree = ...
+params: PyTree = ...
 pde_rhs: Callable = ...
+```
 
-# initialize neural network model
-nn_params: PyTree = ...
-nn_model: Callable = ...
+Now, we need to initialize our loss function 
 
-# concat params
-params = (pde_params, nn_params)
-
-# create NN function
-def equation_of_motion(state: Array[""], params: PyTree) -> Array[""]:
-
-	# unpack the parameters
-	pde_params, nn_params = params
-
-	# PDE equation of motion --> Update State
-	new_state: Array[""] = pde_rhs(state, pde_params)
-
-	# NN subgrid parameterization --> Correction
-	correction: Array[""] = nn_model(state, nn_params)
-
-	# update state with correction
-	new_state: Array[""] += correction
-
-	return new_state
-
-# initialize state
-y_sim: Array["T"] = ...
-
+```python
 # where to save the array
-t0, t1, dt = ...
-saveas: Array["T-1"] = np.arange(t0, t1, dt)
+dt = ...
+
+t0, t1 = ts[0], ts[1]
+saveas: Array["T-1"] = ts[0]
+
+# define loss function
+# initialize loss function
+def loss_fn(y: Array, y_hat: Array) --> Array:
+    return jnp.mean(y_hat - y)
+
+
+def learning_step(params: PyTree, y_obs: Array) --> Array:
+    y_hat: Array["T-1"] = dfx.integrate(pde_rhs, params, y_obs[0][""], t0, t1, dt, saveas)
+
+    loss: Array[""] = loss_fn(y_obs[1:], y_hat)
+
+    return loss
+
+```
+
+
+
+And now, we initialize our optimizer.
+
+```python
+
+
+# initialize optimizer
+learning_rate = 1e-3
+optimizer = optax.sgd(learning_rate=learning_rate)
+# initialize optimizer state
+opt_state = optimizer.init(params)
+```
+
+
+Now, we can loop through to optimize the parameters.
+
+```python
+
 
 # loop through epochs
 for iepoch in num_epochs:
 
-	# forward
-	y_hat: Array["T-1"] = dfx.integrate(equation_of_motion, params, y_sim[0][""], t0, t1, dt, saveas)
-
-	# compute loss
-	loss_value: Array["T-1"] = loss_function(y_hat, y[1:])
-	loss_value: Array[""] = mean(loss_value)
-
 	# calculate gradients wrt params
-	# update params with new gradients
-	
+  loss_value: Array[""], grads: PyTree = jax.value_and_grad(learning_step)(params, y_obs)
+
+	# update optimizer state
+  updates, opt_state = optimizer.update(grads, opt_state, params)
+  # update parameters with new state
+  params = optax.apply_updates(params, updates)
+
+```
+
+This can get a little cumbersome, so we can refactor this a bit using more refined APIs.
+
+```python
+# initialize the solver
+max_iterations = 1_000
+solver = jaxopt.LBFGS(fun=learning_step, maxiter=max_iterations)
+# run solver
+sol: PyTree = solver.run(init_params, y_obs=y_obs)
+# extract parameters
+new_params: PyTree = sol.params
 ```
 	
 
@@ -377,7 +443,7 @@ params: PyTree = ...
 forcing_fn: Callable = ...
 
 
-def equation_of_motion(q, params):
+def qg_equation_of_motion(q, params):
 
     psi = elliptical_inversion(q, beta=params.rossby_radius, method="cg")
 
@@ -406,7 +472,7 @@ $$
 \boldsymbol{F}(\boldsymbol{u},t;\boldsymbol{\theta}) = 
 \alpha \boldsymbol{F}_\text{dyn}(u, t;\boldsymbol{\theta}) + 
 (1 - \alpha) \boldsymbol{F}_\text{param}(u, t;\boldsymbol{\theta})
-$$
+$$ (eq:hybrid-model)
 
 From this formulation, we can consider three types of models that is found within the literature.
 
@@ -432,6 +498,55 @@ $$
 This formulation is based on the paper [{cite}`10.48550/arXiv.2107.07687`]
 
 
+### Pseudo-Code
+
+This pseudo-code will be very similar to the section introducing parameter learning.
+However, in that section, we did not care about the model and the parameters. 
+However, in this case, we do care about the models and the parameters.
+
+First, we need to define our PDE rhs and the associated parameters.
+
+```python
+# initialize pde rhs function, e.g. L63, L96, QG
+dyn_params: PyTree = ...
+dyn_model_rhs: Callable = ...
+```
+
+Next, we need to define our parameterization.
+As mentioned above, we have a range of possible choices we can make for the architecture, e.g., linear, basis function, or a neural network.
+
+```python
+# initialize neural network model
+parameterization_params: PyTree = ...
+parameterization_model: Callable = ...
+```
+
+Now, the equation of motion (as shown in equation [](#eq:hybrid-model)) will be a combination of the two where they are weighted by a parameter, $\alpha$.
+
+```python
+# concat params
+params = (pde_params, nn_params)
+
+# create NN function
+def equation_of_motion(state: Array[""], params: PyTree, alpha: float=0.5) -> Array[""]:
+
+	# unpack the parameters
+	dyn_params, parameterization_params = params
+
+	# dynamical model  equation of motion --> Update State
+	new_state: Array[""] = alpha * dyn_model_rhs(state, dyn_params)
+
+	# parameterization --> Correction
+	correction: Array[""] = (1 - alpha) * parameterization_model(state, parameterization_params)
+
+	# update state with correction
+	new_state: Array[""] += correction
+
+	return new_state
+	
+```
+
+The remainder is the exact same training loop that was presented in the earlier pseudo-code section for the parameter learning.
 
 
 ---
@@ -444,6 +559,10 @@ This formulation is based on the paper [{cite}`10.48550/arXiv.2107.07687`]
 ### Subgrid Parameterization
 
 
+This example is very similar to the parameterization example that was listed above.
+However, it is distinct because we are assuming that the missing physics lies in the high resolution simulations.
+
+
 ```python
 # define pde model
 pde_model: Callable = ...
@@ -453,7 +572,7 @@ nn_model: Callable = ...
 #
 ```
 
-This example was inspired by [{cite}`10.1029/2022MS003124,10.1029/2022MS003258`].
+This example was inspired by [{cite}`10.1029/2022MS003124,10.1029/2022MS003258,10.48550/arXiv.2304.05029`].
 
 ---
 ### Surrogate Models
@@ -482,14 +601,128 @@ $$
 \varepsilon_t \sim \mathcal{N}(0,\boldsymbol{\Sigma}_t)
 $$
 
+**Note**: This will be orders of magnitude faster because we do not have to go through a full ODESolver function.
+However, we can imagine there are some downsides to this method.
+The biggest con is how do we simulate the missing physics that we can expect within the
+
+### Pseudo-Code
+
+
+The rest of the code can use the same training loop that we saw in the above section.
+
 ---
-### Example: Forcing Term
+### Example: Parameterization
+
+This parameterization could be classified as a forcing function.
+
+#### Pseudo-Code
+
+```python
+# initialize PDEs
+dyn_model_params: PyTree = ...
+dyn_model_rhs: Callable [[Array["H W"], ...], Array["H W"]] = ...
+forcing_fn: Callable = ...
+
+# run a full simulation
+dyn_sol_forcing: Array["T H W"] = package.integrate(hires_dyn_model, dyn_model_params, forcing_fn, ...)
+dyn_sol: Array["T H W"] = package.integrate(lores_dyn_model, ...)
+
+# create dataset
+forcing_err: Array["T H W"] = dyn_sol_forcing - dyn_sol
+
+# initialize parameterization + params
+params: PyTree = ...
+parameterization_fn: Callable [[Array["H W"], ...], Array["H W"]]= ...
+
+
+# define loss function
+# initialize loss function
+def loss_fn(y: Array, y_hat: Array) --> Array:
+    return jax.sum(jnp.mean(y_hat - y, axis=1))
+
+
+def learning_step(params: PyTree, dyn_sol: Array, forcing_err: Array) --> Array:
+
+    # vectorize the operation over the time dimension
+    forcing_err_hat: Array["T H W"] = jax.vmap(parameterization_fn)(dyn_sol, params)
+
+    # compute loss
+    loss: Array[""] = loss_fn(forcing_err, forcing_err_hat)
+
+    return loss
+```
 
 ---
 ### Example: Subgrid Parameterization
 
+
+#### Pseudo-Code
+
+
+```python
+# initialize PDEs
+hires_dyn_model: Callable [[Array["H W"], ...], Array["H W"]] = ...
+lores_dyn_model: Callable [[Array["h w"], ...], Array["h w"]]
+
+# run a full simulation
+hires_sol: Array["T H W"] = package.integrate(hires_dyn_model, ...)
+lores_sol: Array["T h w"] = package.integrate(lores_dyn_model, ...)
+
+# filter & downsample/upscale/coarse-grain
+hires_sol_corrupt: Array["T H W"] = filter_fn(hires_sol, ...)
+hires_sol_corrupt: Array["T h w"] = downscale_fn(hires_sol_corrupt, ...)
+
+# create dataset
+lores_err: Array["T h w"] = hires_sol_corrupt - lores_sol
+
+# initialize parameterization + params
+params: PyTree = ...
+parameterization_fn: Callable [[Array["h w"], ...], Array["h w"]]= ...
+
+# define loss function
+# initialize loss function
+def loss_fn(y: Array, y_hat: Array) --> Array:
+    return jax.sum(jnp.mean(y_hat - y, axis=1))
+
+
+def learning_step(params: PyTree, lores_sol: Array, lores_err: Array) --> Array:
+    # vectorize the operation over the time dimension
+    lores_err_hat: Array["T h w"] = jax.vmap(parameterization_fn)(lores_sol, params)
+
+    # compute loss
+    loss: Array[""] = loss_fn(lores_err, lores_err_hat)
+
+    return loss
+```
+
 ---
 ### Example: Surrogate Models
+
+In this example, we are going to learn a fully parameterized spatial operator that will map the state from time $\boldsymbol{u_\text{sim}}(t)$ to $\boldsymbol{u_\text{sim}}(t+1)$.
+This can be labeled a forecasting problem using a spatial operator that works as an autoregressive function.
+
+```python
+# initialize dynamical model
+dyn_model_params: PyTree = ...
+dyn_model_rhs: Callable [[Array["H W"], ...], Array["H W"]] = ...
+
+# run a full simulation
+u_sim: Array["T H W"] = package.integrate(dyn_model_rhs, dyn_model_params, ...)
+
+# initialize spatial operator + params
+params: PyTree = ...
+spatial_operator: Callable [[Array["H W"], ...], Array["H W"]]= ...
+
+# define learning step
+def learning_step(params: PyTree, u_sim: Array) --> Array[""]:
+    # vectorize the operation over the time dimension (except last)
+    u_hat: Array["T-1 H W"] = jax.vmap(spatial_operator)(u_sim[:-1], params)
+
+    # compute loss
+    loss: Array[""] = loss_fn(u_sim[1:], u_hat)
+
+    return loss
+```
 
 
 
